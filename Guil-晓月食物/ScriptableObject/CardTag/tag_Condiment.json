@@ -1,9 +1,9 @@
 {
-    "ActionModifiers": [],
-    "InGameName": {
-        "DefaultText": "\u8c03\u6599\u54c1",
-        "LocalizationKey": "",
-        "ParentObjectID": "dc2259ef8654e0e439f13c3040392e74"
-    },
-    "UniqueOnBoard": false
+  "ActionModifiers": [],
+  "InGameName": {
+    "DefaultText": "调料品",
+    "LocalizationKey": "translate-7175f85d-cb4e-4e92-895b-6055bfdc5697",
+    "ParentObjectID": "dc2259ef8654e0e439f13c3040392e74"
+  },
+  "UniqueOnBoard": false
 }

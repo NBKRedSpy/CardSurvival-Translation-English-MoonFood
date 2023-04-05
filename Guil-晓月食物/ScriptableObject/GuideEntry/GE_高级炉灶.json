@@ -1,29 +1,29 @@
 {
-    "AssociatedCards": [],
-    "AssociatedCardsWarpData": [
-        "6dbd8622757f432f908944ff4547b974"
-    ],
-    "AssociatedCardsWarpType": 3,
-    "AssociatedStats": [],
-    "ExplicitPage": {
-        "m_FileID": 0,
-        "m_PathID": 0
-    },
-    "OverrideDescription": {
-        "DefaultText": "\u8fd9\u91cc\u8bb0\u5f55\u4e86\u5f53\u524d\u53ef\u7528\u7684\u83dc\u8c31\uff1a",
-        "LocalizationKey": "",
-        "ParentObjectID": "40ebba142baa71e4e826aa4a6801a236"
-    },
-    "OverrideIllustration": {
-        "m_FileID": 0,
-        "m_PathID": 0
-    },
-    "OverrideIllustrationWarpData": "\u9ad8\u7ea7\u7089\u7076",
-    "OverrideIllustrationWarpType": 3,
-    "OverrideTitle": {
-        "DefaultText": "\u9ad8\u7ea7\u7089\u7076",
-        "LocalizationKey": "",
-        "ParentObjectID": ""
-    },
-    "RelatedEntries": []
+  "AssociatedCards": [],
+  "AssociatedCardsWarpData": [
+    "6dbd8622757f432f908944ff4547b974"
+  ],
+  "AssociatedCardsWarpType": 3,
+  "AssociatedStats": [],
+  "ExplicitPage": {
+    "m_FileID": 0,
+    "m_PathID": 0
+  },
+  "OverrideDescription": {
+    "DefaultText": "这里记录了当前可用的菜谱：",
+    "LocalizationKey": "translate-795962ee-feda-42b8-b1f6-faf45de1841e",
+    "ParentObjectID": "40ebba142baa71e4e826aa4a6801a236"
+  },
+  "OverrideIllustration": {
+    "m_FileID": 0,
+    "m_PathID": 0
+  },
+  "OverrideIllustrationWarpData": "高级炉灶",
+  "OverrideIllustrationWarpType": 3,
+  "OverrideTitle": {
+    "DefaultText": "高级炉灶",
+    "LocalizationKey": "translate-65830b2f-7e7c-4887-8621-e29c421dd6f1",
+    "ParentObjectID": ""
+  },
+  "RelatedEntries": []
 }
