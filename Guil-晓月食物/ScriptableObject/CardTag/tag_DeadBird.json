@@ -1,0 +1,9 @@
+{
+    "ActionModifiers": [],
+    "InGameName": {
+        "DefaultText": "Bag",
+        "LocalizationKey": "tag_Bag_InGameName",
+        "ParentObjectID": "bd4409f6a381c4a45abe1fb5accf7647"
+    },
+    "UniqueOnBoard": false
+}

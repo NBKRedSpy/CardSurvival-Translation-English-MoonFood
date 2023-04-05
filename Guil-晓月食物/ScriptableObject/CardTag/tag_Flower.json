@@ -1,0 +1,10 @@
+
+{
+    "InGameName": {
+        "ParentObjectID": "b02ad106de3704247a0c8c244d9bfc79",
+        "LocalizationKey": "tag_Glasses_InGameName",
+        "DefaultText": "Glasses"
+    },
+    "UniqueOnBoard": false,
+    "ActionModifiers": []
+}

@@ -1,0 +1,29 @@
+{
+    "AssociatedCards": [],
+    "AssociatedCardsWarpData": [
+        "6dbd8622757f432f908944ff4547b974"
+    ],
+    "AssociatedCardsWarpType": 3,
+    "AssociatedStats": [],
+    "ExplicitPage": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "OverrideDescription": {
+        "DefaultText": "\u8fd9\u91cc\u8bb0\u5f55\u4e86\u5f53\u524d\u53ef\u7528\u7684\u83dc\u8c31\uff1a",
+        "LocalizationKey": "",
+        "ParentObjectID": "40ebba142baa71e4e826aa4a6801a236"
+    },
+    "OverrideIllustration": {
+        "m_FileID": 0,
+        "m_PathID": 0
+    },
+    "OverrideIllustrationWarpData": "\u9ad8\u7ea7\u7089\u7076",
+    "OverrideIllustrationWarpType": 3,
+    "OverrideTitle": {
+        "DefaultText": "\u9ad8\u7ea7\u7089\u7076",
+        "LocalizationKey": "",
+        "ParentObjectID": ""
+    },
+    "RelatedEntries": []
+}

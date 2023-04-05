@@ -1,0 +1,10 @@
+
+{
+    "InGameName": {
+        "ParentObjectID": "71e9a54ca76db5c4f90199966695ab11",
+        "LocalizationKey": "tag_Weather_InGameName",
+        "DefaultText": "Weather"
+    },
+    "UniqueOnBoard": false,
+    "ActionModifiers": []
+}
