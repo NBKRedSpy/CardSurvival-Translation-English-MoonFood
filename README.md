@@ -50,3 +50,7 @@ T-XFdZqo+bxrChd/dXIvpMOJoUMLU=,Some Other Translation,什锦肉串
 
  
 
+# Packaging
+Call the powershell script Package.ps1 to create the Guil-MoonFood.zip release file.
+
+The name is in English since GitHub does not allow unicode characters to be uploaded.

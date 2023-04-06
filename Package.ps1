@@ -1,4 +1,4 @@
-# Packages the mod for release.  Creates a Guil-晓月食物.zip file in the current folder.
+# Creates the release's .zip file
 
 $ModName = "Guil-晓月食物";
 $ModFolder = "./Package/" + $ModName
@@ -11,5 +11,6 @@ dotnet publish .\src\晓月食物.csproj -o $ModFolder
 
 Copy-Item -Recurse ./Guil-晓月食物/* $ModFolder
 
-Compress-Archive -DestinationPath "$ModName.zip" -Path ./Package/*
+# English name since github strips Unicode for security purposes.
+Compress-Archive -DestinationPath "Guil-MoonFood.zip" -Path ./Package/*
 
