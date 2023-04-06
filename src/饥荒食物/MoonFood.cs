@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
+using u = UnityEngine;
+using 晓月食物;
+using BepInEx.Logging;
 
 namespace 饥荒食物;
 
@@ -22,13 +26,28 @@ public class MoonFood : BaseUnityPlugin
 	public static Dictionary<int, CardData> cont_dict = new Dictionary<int, CardData>();
 
 	public static Dictionary<string, CardTag> foodTagDict = new Dictionary<string, CardTag>();
+	public static bool LogCardInfo { get; private set; }
 
-	private void Awake()
+	public static ManualLogSource PluginLogger;
+
+	/// <summary>
+	/// The Mod's directory
+	/// </summary>
+	public static string ModPath;
+
+
+    private void Awake()
 	{
 		Harmony.CreateAndPatchAll(typeof(MoonFood), (string)null);
-		((BaseUnityPlugin)this).Logger.LogInfo((object)"Plugin 晓月食物 is loaded!");
-	}
+		LogCardInfo = Config.Bind<bool>("Debug", "LogCardInfo", false, "If true, will output the localization keys for the cards")
+			.Value;
+		PluginLogger = Logger;
 
+	    Logger.LogInfo("Plugin 晓月食物 is loaded!");
+
+		ModPath = Path.GetDirectoryName(Info.Location);
+	}
+	
 	private void Update()
 	{
 		if (Input.GetKeyUp((KeyCode)292))
@@ -55,14 +74,15 @@ public class MoonFood : BaseUnityPlugin
 		//IL_01ee: Unknown result type (might be due to invalid IL or missing references)
 		CardData val = utc("5dea9d144f3e41a6850c9fa202279d38");
 		CardData val2 = ScriptableObject.CreateInstance<CardData>();
-		val2 = Object.Instantiate<CardData>(val);
+		val2 = u.Object.Instantiate<CardData>(val);
 		((UniqueIDScriptable)val2).UniqueID = guid;
-		((Object)val2).name = name;
+		((u.Object)val2).name = name;
 		((UniqueIDScriptable)val2).Init();
 		val2.CardDescription.DefaultText = cardDescription;
 		val2.CardDescription.ParentObjectID = guid;
-		val2.CardDescription.LocalizationKey = "";
-		Texture2D val3 = new Texture2D(200, 300);
+		val2.CardDescription.SetLocalizationInfo();
+
+        Texture2D val3 = new Texture2D(200, 300);
 		string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName + ".png";
 		if (!File.Exists(path))
 		{
@@ -73,7 +93,9 @@ public class MoonFood : BaseUnityPlugin
 		val2.CardImage = cardImage;
 		val2.CardName.DefaultText = cardName;
 		val2.CardName.ParentObjectID = guid;
-		val2.CardName.LocalizationKey = "";
+		val2.CardName.SetLocalizationInfo();
+
+
 		string[] array = cardNeed.Split('|');
 		Array.Sort(array);
 		string key = string.Join("|", array);
@@ -109,11 +131,11 @@ public class MoonFood : BaseUnityPlugin
 			CardTag[] cardTags = cardModel.CardTags;
 			foreach (CardTag val in cardTags)
 			{
-				if (((val != null) ? ((Object)val).name : null) == null)
+				if (((val != null) ? ((u.Object)val).name : null) == null)
 				{
 					continue;
 				}
-				string name = ((Object)val).name;
+				string name = ((u.Object)val).name;
 				string text = name;
 				switch (text)
 				{
@@ -172,15 +194,15 @@ public class MoonFood : BaseUnityPlugin
 	{
 		//IL_0009: Unknown result type (might be due to invalid IL or missing references)
 		CardData cardModel = card.CardModel;
-		string result = LocalizedString.op_Implicit(cardModel.CardName);
+		string result = cardModel.CardName;
 		if (cardModel != null && cardModel.CardTags.Length != 0)
 		{
 			CardTag[] cardTags = cardModel.CardTags;
 			foreach (CardTag val in cardTags)
 			{
-				if (((val != null) ? ((Object)val).name : null) != null)
+				if (((val != null) ? ((u.Object)val).name : null) != null)
 				{
-					switch (((Object)val).name)
+					switch (((u.Object)val).name)
 					{
 					case "tag_Fish":
 						return "鱼";
@@ -243,20 +265,21 @@ public class MoonFood : BaseUnityPlugin
 		//IL_012c: Unknown result type (might be due to invalid IL or missing references)
 		CardData val = utc(GivenGuid);
 		CardData val2 = utc(ReceiGuid);
-		if (((Object)(object)val == (Object)null) | ((Object)(object)val2 == (Object)null))
+		if (((u.Object)(object)val == (u.Object)null) | ((u.Object)(object)val2 == (u.Object)null))
 		{
 			return;
 		}
 		LocalizedString val3 = default(LocalizedString);
 		val3.DefaultText = ActionName;
 		val3.ParentObjectID = "";
-		val3.LocalizationKey = "Guil-更多水果_Dummy";
-		LocalizedString val4 = val3;
+		val3.SetLocalizationInfo();
+        LocalizedString val4 = val3;
 		val3 = default(LocalizedString);
 		val3.DefaultText = ActionDescription;
 		val3.ParentObjectID = "";
-		val3.LocalizationKey = "Guil-更多水果_Dummy";
-		LocalizedString val5 = val3;
+		val3.SetLocalizationInfo();
+
+        LocalizedString val5 = val3;
 		CardOnCardAction val6 = new CardOnCardAction(val4, val5, duration);
 		Array.Resize(ref val6.CompatibleCards.TriggerCards, 1);
 		val6.CompatibleCards.TriggerCards[0] = val;
@@ -264,7 +287,7 @@ public class MoonFood : BaseUnityPlugin
 		if (ProduceGuid != "")
 		{
 			CardData val7 = utc(ProduceGuid);
-			if ((Object)(object)val7 != (Object)null)
+			if ((u.Object)(object)val7 != (u.Object)null)
 			{
 				CardsDropCollection val8 = new CardsDropCollection();
 				val8.CollectionName = "产出";
@@ -301,19 +324,19 @@ public class MoonFood : BaseUnityPlugin
 		//IL_0105: Unknown result type (might be due to invalid IL or missing references)
 		CardData val = utc(GivenGuid);
 		CardData val2 = utc(ReceiGuid);
-		if (((Object)(object)val == (Object)null) | ((Object)(object)val2 == (Object)null))
+		if (((u.Object)(object)val == (u.Object)null) | ((u.Object)(object)val2 == (u.Object)null))
 		{
 			return;
 		}
 		LocalizedString val3 = default(LocalizedString);
 		val3.DefaultText = ActionName;
 		val3.ParentObjectID = "";
-		val3.LocalizationKey = "Guil-更多水果_Dummy";
+		val3.SetLocalizationInfo();
 		LocalizedString val4 = val3;
 		val3 = default(LocalizedString);
 		val3.DefaultText = ActionDescription;
 		val3.ParentObjectID = "";
-		val3.LocalizationKey = "Guil-更多水果_Dummy";
+		val3.SetLocalizationInfo();
 		LocalizedString val5 = val3;
 		CardOnCardAction val6 = new CardOnCardAction(val4, val5, duration);
 		Array.Resize(ref val6.CompatibleCards.TriggerCards, 1);
@@ -325,7 +348,7 @@ public class MoonFood : BaseUnityPlugin
 		if (ProduceGuid != "")
 		{
 			CardData val7 = utc(ProduceGuid);
-			if ((Object)(object)val7 != (Object)null)
+			if ((u.Object)(object)val7 != (u.Object)null)
 			{
 				((CardAction)val6).ReceivingCardChanges.ModType = (CardModifications)2;
 				((CardAction)val6).ReceivingCardChanges.TransformInto = val7;
@@ -375,12 +398,14 @@ public class MoonFood : BaseUnityPlugin
 		//IL_0601: Unknown result type (might be due to invalid IL or missing references)
 		CardData[] array = (CardData[])(object)new CardData[3];
 		CardData val = ScriptableObject.CreateInstance<CardData>();
-		val = Object.Instantiate<CardData>(utc("860762b307d74caf84d314790448f9f6"));
+		val = u.Object.Instantiate<CardData>(utc("860762b307d74caf84d314790448f9f6"));
 		((UniqueIDScriptable)val).UniqueID = guid[0];
-		((Object)val).name = name;
+		((u.Object)val).name = name;
 		((UniqueIDScriptable)val).Init();
 		val.CardDescription.DefaultText = cardDescription[0];
-		val.CardDescription.ParentObjectID = ((UniqueIDScriptable)val).UniqueID;
+		val.CardDescription.SetLocalizationInfo();
+
+        val.CardDescription.ParentObjectID = ((UniqueIDScriptable)val).UniqueID;
 		Texture2D val2 = new Texture2D(200, 300);
 		string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName[0] + ".png";
 		if (!File.Exists(path))
@@ -391,7 +416,9 @@ public class MoonFood : BaseUnityPlugin
 		Sprite cardImage = Sprite.Create(val2, new Rect(0f, 0f, (float)((Texture)val2).width, (float)((Texture)val2).height), Vector2.zero);
 		val.CardImage = cardImage;
 		val.CardName.DefaultText = cardName[0];
-		val.CardName.ParentObjectID = ((UniqueIDScriptable)val).UniqueID;
+		val.CardName.SetLocalizationInfo();
+
+        val.CardName.ParentObjectID = ((UniqueIDScriptable)val).UniqueID;
 		if (!caneat)
 		{
 			val.DismantleActions.Clear();
@@ -427,12 +454,14 @@ public class MoonFood : BaseUnityPlugin
 		val.SpoilageTime.MaxValue = spoilTime;
 		array[0] = val;
 		CardData val3 = ScriptableObject.CreateInstance<CardData>();
-		val3 = Object.Instantiate<CardData>(utc("4b17f870e9ca41eb95bf7d08aa387528"));
+		val3 = u.Object.Instantiate<CardData>(utc("4b17f870e9ca41eb95bf7d08aa387528"));
 		((UniqueIDScriptable)val3).UniqueID = guid[1];
-		((Object)val3).name = name + "丛";
+		((u.Object)val3).name = name + "丛";
 		((UniqueIDScriptable)val3).Init();
 		val3.CardDescription.DefaultText = cardDescription[1];
-		val3.CardDescription.ParentObjectID = ((UniqueIDScriptable)val3).UniqueID;
+		val3.CardDescription.SetLocalizationInfo();
+
+        val3.CardDescription.ParentObjectID = ((UniqueIDScriptable)val3).UniqueID;
 		Texture2D val4 = new Texture2D(200, 300);
 		path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName[1] + ".png";
 		if (!File.Exists(path))
@@ -443,7 +472,9 @@ public class MoonFood : BaseUnityPlugin
 		cardImage = Sprite.Create(val4, new Rect(0f, 0f, (float)((Texture)val4).width, (float)((Texture)val4).height), Vector2.zero);
 		val3.CardImage = cardImage;
 		val3.CardName.DefaultText = cardName[1];
-		val3.CardName.ParentObjectID = ((UniqueIDScriptable)val3).UniqueID;
+		val3.CardName.SetLocalizationInfo();
+
+        val3.CardName.ParentObjectID = ((UniqueIDScriptable)val3).UniqueID;
 		CardDrop val5 = default(CardDrop);
 		val5.DroppedCard = val;
 		val5.Quantity = new Vector2Int(getNum, getNum);
@@ -451,12 +482,14 @@ public class MoonFood : BaseUnityPlugin
 		Traverse.Create((object)((CardAction)val3.DismantleActions[0]).ProducedCards[0]).Field("DroppedCards").SetValue((object)value);
 		array[1] = val3;
 		CardData val6 = ScriptableObject.CreateInstance<CardData>();
-		val6 = Object.Instantiate<CardData>(utc("192eb567170e4fa491c18ea3e5f5ec03"));
+		val6 = u.Object.Instantiate<CardData>(utc("192eb567170e4fa491c18ea3e5f5ec03"));
 		((UniqueIDScriptable)val6).UniqueID = guid[2];
-		((Object)val6).name = name + "田";
+		((u.Object)val6).name = name + "田";
 		((UniqueIDScriptable)val6).Init();
 		val6.CardName.DefaultText = cardName[2];
-		val6.CardName.ParentObjectID = ((UniqueIDScriptable)val6).UniqueID;
+		val6.CardName.SetLocalizationInfo();
+
+        val6.CardName.ParentObjectID = ((UniqueIDScriptable)val6).UniqueID;
 		for (int l = 0; l <= 2; l++)
 		{
 			val5.DroppedCard = val3;
@@ -467,7 +500,7 @@ public class MoonFood : BaseUnityPlugin
 		val6.Progress.MaxValue = proDays * 96;
 		array[2] = val6;
 		CardData val7 = utc(whereToFindGuid);
-		if (Object.op_Implicit((Object)(object)val7))
+		if (val7)
 		{
 			CardsDropCollection val8 = new CardsDropCollection();
 			val8.CollectionName = "植株";
@@ -480,7 +513,7 @@ public class MoonFood : BaseUnityPlugin
 			Array.Resize(ref ((CardAction)val7.DismantleActions[0]).ProducedCards, ((CardAction)val7.DismantleActions[0]).ProducedCards.Length + 1);
 			((CardAction)val7.DismantleActions[0]).ProducedCards[((CardAction)val7.DismantleActions[0]).ProducedCards.Length - 1] = val8;
 		}
-		添加种田(((UniqueIDScriptable)val).UniqueID, "0308e91cdd2d6aa44a9ed0f8187f88d3", "种植" + LocalizedString.op_Implicit(val.CardName), "把" + LocalizedString.op_Implicit(val.CardName) + "种植在田中", 2, ((UniqueIDScriptable)val6).UniqueID);
+		添加种田(((UniqueIDScriptable)val).UniqueID, "0308e91cdd2d6aa44a9ed0f8187f88d3", "种植" + val.CardName, "把" + val.CardName + "种植在田中", 2, ((UniqueIDScriptable)val6).UniqueID);
 		return array;
 	}
 
@@ -499,15 +532,15 @@ public class MoonFood : BaseUnityPlugin
 		//IL_00e2: Unknown result type (might be due to invalid IL or missing references)
 		//IL_00e3: Unknown result type (might be due to invalid IL or missing references)
 		CardData val = ScriptableObject.CreateInstance<CardData>();
-		val = Object.Instantiate<CardData>(utc("cb27f80532de40c5a164202ed138090c"));
+		val = u.Object.Instantiate<CardData>(utc("cb27f80532de40c5a164202ed138090c"));
 		((UniqueIDScriptable)val).UniqueID = 联动植株Guid;
-		((Object)val).name = 联动后植株内部名;
+		((u.Object)val).name = 联动后植株内部名;
 		((UniqueIDScriptable)val).Init();
-		val.CardName.DefaultText = LocalizedString.op_Implicit(植株.CardName) + "植株";
-		val.CardName.LocalizationKey = "";
+		val.CardName.DefaultText = 植株.CardName + "植株";
+		val.CardName.SetLocalizationInfo();
 		val.CardName.ParentObjectID = ((UniqueIDScriptable)val).UniqueID;
 		val.CardDescription.DefaultText = "我应该把它放入泥土中，等待它成熟。\n植株特性：";
-		val.CardDescription.LocalizationKey = "";
+		val.CardDescription.SetLocalizationInfo();
 		val.CardDescription.ParentObjectID = ((UniqueIDScriptable)val).UniqueID;
 		添加栽培土交互(((UniqueIDScriptable)植株).UniqueID, "5b01eb40bb8245a091086c584538238d", "制作植株", "将植株放入栽培土中", 0, 联动植株Guid);
 		CardDrop val2 = default(CardDrop);
@@ -521,25 +554,32 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_DirtFavor");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 水分需求;
-			}
+				val.CardDescription.SetLocalizationInfo();
+
+            }
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_WaterFavor");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 水分需求;
-		}
+            val.CardDescription.SetLocalizationInfo();
+
+        }
 		if (!(环境需求1 == "喜潮"))
 		{
 			if (环境需求1 == "喜干")
 			{
 				添加Tag(val, "tag_Plant_DryFavor");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 环境需求1;
-			}
+				val.CardDescription.SetLocalizationInfo();
+
+            }
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_DampFavor");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 环境需求1;
+			val.CardDescription.SetLocalizationInfo();	
 		}
 		if (!(环境需求2 == "喜光"))
 		{
@@ -547,12 +587,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_DarkFavor");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 环境需求2;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_LightFavor");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 环境需求2;
+			val.CardDescription.SetLocalizationInfo();	
 		}
 		if (!(螨虫 == "耐螨虫"))
 		{
@@ -560,12 +602,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_MiteFear");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 螨虫;
+				val.CardDescription.SetLocalizationInfo();	
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_MiteProof");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 螨虫;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (!(真菌 == "耐真菌"))
 		{
@@ -573,12 +617,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_FungiFear");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 真菌;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_FungiProof");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 真菌;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (!(寿命 == "长寿"))
 		{
@@ -586,12 +632,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_ShortLive");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 寿命;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_LongLive");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 寿命;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (!(产物进度 == "高产"))
 		{
@@ -599,25 +647,29 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_LowProduce");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 产物进度;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_HighProduce");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 产物进度;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (!(生长度 == "速生"))
 		{
 			if (生长度 == "慢生")
 			{
 				添加Tag(val, "tag_Plant_GrowSlow");
-				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 生长度;
+				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 生长度;	
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_GrowFast");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 生长度;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (!(肥力 == "肥田"))
 		{
@@ -625,6 +677,7 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_ConsumeFertilize");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 肥力;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
@@ -638,12 +691,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_AirLess");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 土壤疏松度;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_AirMore");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 土壤疏松度;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (!(农药 == "杀螨虫"))
 		{
@@ -651,17 +706,20 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(val, "tag_Plant_AntiFungi");
 				val.CardDescription.DefaultText = val.CardDescription.DefaultText + 农药;
+				val.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(val, "tag_Plant_AntiMite");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + 农药;
+			val.CardDescription.SetLocalizationInfo();
 		}
 		if (是否小体型 == "是")
 		{
 			添加Tag(val, "tag_Plant_Small");
 			val.CardDescription.DefaultText = val.CardDescription.DefaultText + "小体型";
+			val.CardDescription.SetLocalizationInfo();
 		}
 		GameLoad.Instance.DataBase.AllData.Add((UniqueIDScriptable)(object)val);
 	}
@@ -672,12 +730,12 @@ public class MoonFood : BaseUnityPlugin
 		//IL_0079: Expected O, but got Unknown
 		//IL_00ea: Unknown result type (might be due to invalid IL or missing references)
 		//IL_00ef: Unknown result type (might be due to invalid IL or missing references)
-		if ((Object)(object)utc(guid) == (Object)null)
+		if ((u.Object)(object)utc(guid) == (u.Object)null)
 		{
 			CardData val = ScriptableObject.CreateInstance<CardData>();
-			val = Object.Instantiate<CardData>(utc("175ef2773fd84a3c816e93c4307da58f"));
+			val = u.Object.Instantiate<CardData>(utc("175ef2773fd84a3c816e93c4307da58f"));
 			((UniqueIDScriptable)val).UniqueID = guid;
-			((Object)val).name = name;
+			((u.Object)val).name = name;
 			((UniqueIDScriptable)val).Init();
 			val.CardDescription.DefaultText = cardDescription;
 			val.CardDescription.ParentObjectID = guid;
@@ -739,15 +797,15 @@ public class MoonFood : BaseUnityPlugin
 			}
 			foreach (InGameCardBase allCard in item.AllCards)
 			{
-				if ((Object)(object)allCard != (Object)null)
+				if ((u.Object)(object)allCard != (u.Object)null)
 				{
-					if ((Object)(object)allCard.ContainedLiquidModel != (Object)null)
+					if ((u.Object)(object)allCard.ContainedLiquidModel != (u.Object)null)
 					{
-						array[num] = LocalizedString.op_Implicit(allCard.ContainedLiquidModel.CardName);
+						array[num] = allCard.ContainedLiquidModel.CardName;
 					}
 					else
 					{
-						array[num] = LocalizedString.op_Implicit(allCard.CardModel.CardName);
+						array[num] = allCard.CardModel.CardName;
 					}
 					num++;
 				}
@@ -757,7 +815,7 @@ public class MoonFood : BaseUnityPlugin
 		string text = string.Join("|", array);
 		Debug.Log((object)("名称判断：" + text));
 		lianjin_dict.TryGetValue(text, out var value);
-		if (Object.op_Implicit((Object)(object)value))
+		if (value)
 		{
 			List<int> list = new List<int>();
 			int num2 = 0;
@@ -767,7 +825,7 @@ public class MoonFood : BaseUnityPlugin
 				{
 					foreach (InGameCardBase allCard2 in item2.AllCards)
 					{
-						if ((Object)(object)allCard2 != (Object)null && (Object)(object)allCard2.ContainedLiquidModel != (Object)null)
+						if ((u.Object)(object)allCard2 != (u.Object)null && (u.Object)(object)allCard2.ContainedLiquidModel != (u.Object)null)
 						{
 							InGameCardBase containedLiquid = allCard2.ContainedLiquid;
 							containedLiquid.CurrentLiquidQuantity -= 300f;
@@ -821,7 +879,7 @@ public class MoonFood : BaseUnityPlugin
 			}
 			foreach (InGameCardBase allCard in item.AllCards)
 			{
-				if ((Object)(object)allCard != (Object)null)
+				if ((u.Object)(object)allCard != (u.Object)null)
 				{
 					num2 += allCard.CardModel.MaxLiquidCapacity;
 					num++;
@@ -857,9 +915,9 @@ public class MoonFood : BaseUnityPlugin
 	{
 		CardData val = utc("247cb2c7dc0f4bc0814e91d794900c40");
 		CardData val2 = ScriptableObject.CreateInstance<CardData>();
-		val2 = Object.Instantiate<CardData>(val);
+		val2 = u.Object.Instantiate<CardData>(val);
 		((UniqueIDScriptable)val2).UniqueID = guid;
-		((Object)val2).name = name;
+		((u.Object)val2).name = name;
 		((UniqueIDScriptable)val2).Init();
 		val2.CardDescription.DefaultText = cardDescription;
 		val2.CardDescription.ParentObjectID = guid;
@@ -927,7 +985,7 @@ public class MoonFood : BaseUnityPlugin
 		{
 			string key = item3.Key;
 			CardData value = item3.Value;
-			string text3 = LocalizedString.op_Implicit(value.CardName) + "=" + key;
+			string text3 = value.CardName + "=" + key;
 			if (text3.Length < 18)
 			{
 				text3 += 生成空格(18 - text3.Length);
@@ -940,25 +998,25 @@ public class MoonFood : BaseUnityPlugin
 				num = 0;
 			}
 		}
-		GuideEntry[] array2 = Object.FindObjectsOfType<GuideEntry>();
+		GuideEntry[] array2 = u.Object.FindObjectsOfType<GuideEntry>();
 		GuideEntry[] array3 = array2;
 		foreach (GuideEntry val in array3)
 		{
-			if (((Object)val).name.IndexOf("高级炉灶") >= 0)
+			if (((u.Object)val).name.IndexOf("高级炉灶") >= 0)
 			{
 				val.OverrideDescription.DefaultText = val.OverrideDescription.DefaultText + "\n" + text2;
 			}
 		}
 		CardData val2 = utc("cb27f80532de40c5a164202ed138090c");
-		if (Object.op_Implicit((Object)(object)val2))
+		if (val2)
 		{
-			CardTag[] array4 = Object.FindObjectsOfType<CardTag>();
+			CardTag[] array4 = u.Object.FindObjectsOfType<CardTag>();
 			CardTag[] array5 = array4;
 			foreach (CardTag val3 in array5)
 			{
-				if (((Object)val3).name.StartsWith("tag_Plant_"))
+				if (((u.Object)val3).name.StartsWith("tag_Plant_"))
 				{
-					plantTagDict[((Object)val3).name] = val3;
+					plantTagDict[((u.Object)val3).name] = val3;
 				}
 			}
 		}
@@ -996,7 +1054,7 @@ public class MoonFood : BaseUnityPlugin
 						GameLoad.Instance.DataBase.AllData.Add((UniqueIDScriptable)(object)array7[0]);
 						GameLoad.Instance.DataBase.AllData.Add((UniqueIDScriptable)(object)array7[1]);
 						GameLoad.Instance.DataBase.AllData.Add((UniqueIDScriptable)(object)array7[2]);
-						if (array6[17] == "是" && Object.op_Implicit((Object)(object)val2))
+						if (array6[17] == "是" && val2)
 						{
 							联动精耕细作(array7[0], array6[18], array6[19], array6[20], array6[21], array6[22], array6[23], array6[24], array6[25], array6[26], array6[27], array6[28], array6[29], array6[30], array6[31]);
 						}
@@ -1051,7 +1109,7 @@ public class MoonFood : BaseUnityPlugin
 	[HarmonyPatch(typeof(GameManager), "ActionRoutine")]
 	public static IEnumerator ARPatch(IEnumerator results, CardAction _Action, InGameCardBase _ReceivingCard, bool _FastMode, bool _ModifiersAlreadyCollected = false)
 	{
-		if (LocalizedString.op_Implicit(_Action.ActionName) == "高级烹饪" && _Action.ActionName.LocalizationKey == "GuilPot")
+		if (_Action.ActionName == "高级烹饪" && _Action.ActionName.LocalizationKey == "GuilPot")
 		{
 			if (_ReceivingCard != null && _ReceivingCard.CardsInInventory.Count > 0)
 			{
@@ -1067,17 +1125,17 @@ public class MoonFood : BaseUnityPlugin
 					}
 					foreach (InGameCardBase card2 in isa2.AllCards)
 					{
-						if ((Object)(object)card2 != (Object)null)
+						if ((u.Object)(object)card2 != (u.Object)null)
 						{
-							if ((Object)(object)card2.ContainedLiquidModel != (Object)null)
+							if ((u.Object)(object)card2.ContainedLiquidModel != (u.Object)null)
 							{
-								内容物[x] = LocalizedString.op_Implicit(card2.ContainedLiquidModel.CardName);
+								内容物[x] = card2.ContainedLiquidModel.CardName;
 								内容物标签[x] = 标签计算(card2.ContainedLiquid);
 								内容物混合[x] = 混合计算(card2.ContainedLiquid);
 							}
 							else
 							{
-								内容物[x] = LocalizedString.op_Implicit(card2.CardModel.CardName);
+								内容物[x] = card2.CardModel.CardName;
 								内容物标签[x] = 标签计算(card2);
 								内容物混合[x] = 混合计算(card2);
 							}
@@ -1099,7 +1157,7 @@ public class MoonFood : BaseUnityPlugin
 				{
 					food_dict.TryGetValue(原料3, out 产物);
 				}
-				if (Object.op_Implicit((Object)(object)产物))
+				if (产物)
 				{
 					List<int> exceptList = new List<int>();
 					int y = 0;
@@ -1109,7 +1167,7 @@ public class MoonFood : BaseUnityPlugin
 						{
 							foreach (InGameCardBase card1 in isa.AllCards)
 							{
-								if ((Object)(object)card1 != (Object)null && (Object)(object)card1.ContainedLiquidModel != (Object)null)
+								if ((u.Object)(object)card1 != (u.Object)null && (u.Object)(object)card1.ContainedLiquidModel != (u.Object)null)
 								{
 									InGameCardBase containedLiquid = card1.ContainedLiquid;
 									containedLiquid.CurrentLiquidQuantity -= 300f;
@@ -1138,11 +1196,11 @@ public class MoonFood : BaseUnityPlugin
 				}
 			}
 		}
-		if (LocalizedString.op_Implicit(_Action.ActionName) == "高级炼金" && _Action.ActionName.LocalizationKey == "Guil-炼金")
+		if (_Action.ActionName == "高级炼金" && _Action.ActionName.LocalizationKey == "Guil-炼金")
 		{
 			验证炼金(_Action, _ReceivingCard);
 		}
-		if (LocalizedString.op_Implicit(_Action.ActionName) == "容器合并" && _Action.ActionName.LocalizationKey == "Guil-炼金")
+		if (_Action.ActionName == "容器合并" && _Action.ActionName.LocalizationKey == "Guil-炼金")
 		{
 			容器合并(_Action, _ReceivingCard);
 		}
@@ -1151,4 +1209,6 @@ public class MoonFood : BaseUnityPlugin
 			yield return results.Current;
 		}
 	}
+
+
 }
