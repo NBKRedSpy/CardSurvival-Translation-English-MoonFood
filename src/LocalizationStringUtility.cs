@@ -6,18 +6,45 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using BepInEx;
+using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 using 饥荒食物;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace 晓月食物
+namespace LocalizationUtilities
 {
     public static class LocalizationStringUtility
     {
+        /// <summary>        
+        /// If true, will log the generated card's key and current DefaultText
+        /// to the BepInEx log.
+        /// </summary>
+        private static bool LogCardInfo { get; set; }
+
+        /// <summary>
+        /// The mod's directory.  EG: Path.GetDirectoryName(Info.Location);
+        /// </summary>
+        private static string ModPath { get; set; }
+
+        private static ManualLogSource Logger { get; set; }
+
         private static SHA1 Sha1 = SHA1.Create();
 
         private static Dictionary<string, string> Localization;
+
+        /// <summary>
+        /// Initializes the Utility settings.
+        /// </summary>
+        /// <param name="logCardInfo"></param>
+        /// <param name="dllPath"></param>
+        /// <param name="logger"></param>
+        public static void Init(bool logCardInfo, string dllPath, ManualLogSource logger)
+        {
+            LogCardInfo = logCardInfo;
+            ModPath = Path.GetDirectoryName(dllPath);
+            Logger = logger;
+        }
 
         /// <summary>
         /// Generates and sets a localization key based on a hash of the DefaultText.
@@ -46,12 +73,12 @@ namespace 晓月食物
 
             //Log the keys and current values.  Useful for creating SimpEn.csv entries for the dynamically created cards
             //  in this mod.
-            if (MoonFood.LogCardInfo)
+            if (LogCardInfo)
             {
-                MoonFood.PluginLogger.LogInfo($"{localizedString.LocalizationKey}|{localizedString.DefaultText}");
+                Logger.LogInfo($"{localizedString.LocalizationKey}|{localizedString.DefaultText}");
             }
         }
-
+        
         /// <summary>
         /// Creates a localization lookup from ./Localization/SimpEn.csv if the game's language is English.
         /// </summary>
@@ -67,7 +94,7 @@ namespace 晓月食物
                 }
 
                 //Check for localization file
-                string translationFile = Path.Combine(MoonFood.ModPath, "Localization/SimpEn.csv");
+                string translationFile = Path.Combine(ModPath, "Localization/SimpEn.csv");
 
                 if (!File.Exists(translationFile))
                 {
@@ -91,7 +118,11 @@ namespace 晓月食物
             }
             catch (Exception ex)
             {
-                MoonFood.PluginLogger.LogError($"Error loading SimpEn.csv: {ex}");
+                if(Logger is not null)
+                {
+                    Logger.LogError($"Error loading SimpEn.csv: {ex}");
+                }
+
                 return new();
             }
         }

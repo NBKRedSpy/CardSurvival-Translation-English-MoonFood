@@ -9,7 +9,7 @@ using BepInEx;
 using HarmonyLib;
 using UnityEngine;
 using u = UnityEngine;
-using 晓月食物;
+using LocalizationUtilities;
 using BepInEx.Logging;
 
 namespace 饥荒食物;
@@ -26,26 +26,24 @@ public class MoonFood : BaseUnityPlugin
 	public static Dictionary<int, CardData> cont_dict = new Dictionary<int, CardData>();
 
 	public static Dictionary<string, CardTag> foodTagDict = new Dictionary<string, CardTag>();
-	public static bool LogCardInfo { get; private set; }
 
-	public static ManualLogSource PluginLogger;
-
-	/// <summary>
-	/// The Mod's directory
-	/// </summary>
-	public static string ModPath;
-
+	
 
     private void Awake()
 	{
-		Harmony.CreateAndPatchAll(typeof(MoonFood), (string)null);
-		LogCardInfo = Config.Bind<bool>("Debug", "LogCardInfo", false, "If true, will output the localization keys for the cards")
-			.Value;
-		PluginLogger = Logger;
+
+		LocalizationStringUtility.Init(
+			Config.Bind<bool>("Debug", "LogCardInfo", false, "If true, will output the localization keys for the cards")
+				.Value,
+			Info.Location,
+			Logger
+		);
+
+
+        Harmony.CreateAndPatchAll(typeof(MoonFood), (string)null);
 
 	    Logger.LogInfo("Plugin 晓月食物 is loaded!");
 
-		ModPath = Path.GetDirectoryName(Info.Location);
 	}
 	
 	private void Update()
