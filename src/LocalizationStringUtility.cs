@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using BepInEx;
 using BepInEx.Logging;
-using HarmonyLib;
-using UnityEngine;
-using 饥荒食物;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace LocalizationUtilities
 {
