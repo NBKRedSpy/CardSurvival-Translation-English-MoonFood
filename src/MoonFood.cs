@@ -9,6 +9,7 @@ using HarmonyLib;
 using UnityEngine;
 using LocalizationUtilities;
 using BepInEx.Configuration;
+using System.Linq;
 
 namespace 饥荒食物
 {
@@ -62,7 +63,7 @@ public class MoonFood : BaseUnityPlugin
 			//卡牌描述
 			liaoli.CardDescription.DefaultText = cardDescription;
 			liaoli.CardDescription.ParentObjectID = guid;
-			liaoli.CardDescription.LocalizationKey = "";
+			liaoli.CardDescription.SetLocalizationInfo();
 
 			//卡牌图片
 			Texture2D texture2D = new Texture2D(200, 300);
@@ -78,7 +79,7 @@ public class MoonFood : BaseUnityPlugin
 			//卡牌名称
 			liaoli.CardName.DefaultText = cardName;
 			liaoli.CardName.ParentObjectID = guid;
-			liaoli.CardName.LocalizationKey = "";
+			liaoli.CardName.SetLocalizationInfo(); 
 
 			string[] dummy = cardNeed.Split('|');
 			Array.Sort(dummy);
@@ -276,7 +277,6 @@ public class MoonFood : BaseUnityPlugin
 			{
 				DefaultText = ActionDescription,
 				ParentObjectID = "",
-				LocalizationKey = "Guil-更多水果_Dummy"
 			};
 			name2.SetLocalizationInfo();
 			
@@ -316,6 +316,7 @@ public class MoonFood : BaseUnityPlugin
 			plant.Init();
 			//CardDescription
 			plant.CardDescription.DefaultText = cardDescription[0];
+			plant.CardDescription.SetLocalizationInfo();
 			plant.CardDescription.ParentObjectID = plant.UniqueID;
 			//CardImage
 			Texture2D texture2D = new Texture2D(200, 300);
@@ -379,7 +380,9 @@ public class MoonFood : BaseUnityPlugin
 			plantCong.CardImage = sp;
 			//CardName
 			plantCong.CardName.DefaultText = cardName[1];
-			plantCong.CardName.ParentObjectID = plantCong.UniqueID;
+			plantCong.CardName.SetLocalizationInfo();
+
+            plantCong.CardName.ParentObjectID = plantCong.UniqueID;
 			//DismantleActions
 			CardDrop cd = new CardDrop();
 			cd.DroppedCard = plant;
@@ -472,7 +475,9 @@ public class MoonFood : BaseUnityPlugin
 				case "喜旱":
 					添加Tag(plant, "tag_Plant_DirtFavor");
 					plant.CardDescription.DefaultText = plant.CardDescription.DefaultText + 水分需求;
-					break;
+					plant.CardDescription.SetLocalizationInfo();
+
+                    break;
 				default:
 					break;
 			}
