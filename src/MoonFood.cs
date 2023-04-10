@@ -1003,7 +1003,7 @@ public class MoonFood : BaseUnityPlugin
 				cont_dict[i] =  生成容器("Guil_晓月食物-" + i.ToString() + "级容器", list[i-1], i.ToString() + "级容器","一个特质的容器，目前等级为" + i.ToString(),i);
 			}
 
-			/*======================兼容食物拓展=======================
+            /*======================兼容食物拓展=======================
 			//判断soup和食物拓展是否存在
 			CardData 葱 = utc("53c04be9d8ea407bb9405c8d3ecd41fa");
 			CardData 长柄杓 = utc("51797556981e11edbdf850e085c43d2a");
@@ -1017,13 +1017,16 @@ public class MoonFood : BaseUnityPlugin
 						}
 					}
 				}
+
+				!IMPORTANT!:  If this area is uncommented, it be changed to use LocalizationKeys instead of DefaultText compares.
+
 				//遍历所有GpTag
 				CardTabGroup[] CardTabGroups = FindObjectsOfType<CardTabGroup>();
 				foreach (CardTabGroup tag in CardTabGroups) {
 					if (tag.TabName != null) {
 						switch (tag.TabName.DefaultText) {
 						
-							TODO:  If this area is uncommented, it must be translated.
+							
 							case "调料品":
 								foreach (CardData card in tag.IncludedCards) {
 									if (card.name.StartsWith("FoodExpansion")) {
@@ -1123,10 +1126,10 @@ public class MoonFood : BaseUnityPlugin
 				}
 			}
 			*/
-		}
+        }
 
 
-		[HarmonyPostfix]
+        [HarmonyPostfix]
 		[HarmonyPatch(typeof(GameManager), "ActionRoutine")]
 		public static IEnumerator ARPatch(IEnumerator results, CardAction _Action, InGameCardBase _ReceivingCard, bool _FastMode, bool _ModifiersAlreadyCollected = false)
 		{
