@@ -31,7 +31,7 @@ public class MoonFood : BaseUnityPlugin
 		EnableDebugKeys = Config.Bind<bool>("Debug", "启用的调试键 (EnabledDebugKeys)", false, "如果为真，将启用调试键 (If true, will enable the debug keys)");
 
 		Harmony.CreateAndPatchAll(typeof(MoonFood));
-		base.Logger.LogInfo("Plugin 晓月食物 is loaded!");
+			Logger.LogInfo("Plugin 晓月食物 is loaded!");
 	}
 
 		private void Update()
@@ -188,6 +188,8 @@ public class MoonFood : BaseUnityPlugin
 						return "奶";
 					case "tag_Tea":
 						return "茶";
+							default:
+								break;
 					}
 				}
 				}
@@ -222,13 +224,14 @@ public class MoonFood : BaseUnityPlugin
 				ParentObjectID = "",
 			};
 			name1.SetLocalizationInfo();
+			
 			LocalizedString name2 = new LocalizedString
 			{
 				DefaultText = ActionDescription,
 				ParentObjectID = "",
 			};
+			name2.SetLocalizationInfo();
 			
- 			name2.SetLocalizationInfo();
 			CardOnCardAction action = new CardOnCardAction(name1, name2, duration);
 
 			Array.Resize(ref action.CompatibleCards.TriggerCards, 1);
@@ -393,7 +396,7 @@ public class MoonFood : BaseUnityPlugin
 			plantTian.Init();
 			//CardName
 			plantTian.CardName.DefaultText = cardName[2];
-		plantTian.CardName.SetLocalizationInfo();	
+			plantTian.CardName.SetLocalizationInfo();	
 			plantTian.CardName.ParentObjectID = plantTian.UniqueID;
 			//产出
 			for (int i1 = 0; i1 <= 2; i1++) {
@@ -444,10 +447,10 @@ public class MoonFood : BaseUnityPlugin
 			plant.name = 联动后植株内部名;
 			plant.Init();
 			plant.CardName.DefaultText = 植株.CardName + "植株";
-  		plant.CardName.SetLocalizationInfo();
+  			plant.CardName.SetLocalizationInfo();
 			plant.CardName.ParentObjectID = plant.UniqueID;
 			plant.CardDescription.DefaultText = "我应该把它放入泥土中，等待它成熟。\n植株特性：";
-		cardData.CardDescription.SetLocalizationInfo();
+            plant.CardDescription.SetLocalizationInfo();
 			plant.CardDescription.ParentObjectID = plant.UniqueID;
 			//添加交互
 			添加栽培土交互(植株.UniqueID, "5b01eb40bb8245a091086c584538238d", "制作植株", "将植株放入栽培土中", 0, 联动植株Guid);
@@ -478,7 +481,7 @@ public class MoonFood : BaseUnityPlugin
 				case "喜潮":
 					添加Tag(plant, "tag_Plant_DampFavor");
 					plant.CardDescription.DefaultText = plant.CardDescription.DefaultText + 环境需求1;
-				cardData.CardDescription.SetLocalizationInfo();	
+					plant.CardDescription.SetLocalizationInfo();	
 					break;
 				case "喜干":
 					添加Tag(plant, "tag_Plant_DryFavor");
@@ -488,13 +491,12 @@ public class MoonFood : BaseUnityPlugin
 				default:
 					break;
 			}
-		}
 			//喜光 tag_Plant_LightFavor 喜暗 tag_Plant_DarkFavor
 			switch (环境需求2) {
 				case "喜光":
 					添加Tag(plant, "tag_Plant_LightFavor");
 					plant.CardDescription.DefaultText = plant.CardDescription.DefaultText + 环境需求2;
-				cardData.CardDescription.SetLocalizationInfo();
+					plant.CardDescription.SetLocalizationInfo();
 					break;
 				case "喜暗":
 					添加Tag(plant, "tag_Plant_DarkFavor");
@@ -504,7 +506,6 @@ public class MoonFood : BaseUnityPlugin
 				default:
 					break;
 		}
-		if (!(螨虫 == "耐螨虫"))
 			//螨虫
 			switch (螨虫) {
 				case "耐螨虫":
@@ -525,7 +526,7 @@ public class MoonFood : BaseUnityPlugin
 				case "耐真菌":
 					添加Tag(plant, "tag_Plant_FungiProof");
 					plant.CardDescription.DefaultText = plant.CardDescription.DefaultText + 真菌;
-					plant.CardDescription.SetLocalizationInfo()
+					plant.CardDescription.SetLocalizationInfo();
 					break;
 				case "怕真菌":
 					添加Tag(plant, "tag_Plant_FungiFear");
@@ -569,7 +570,6 @@ public class MoonFood : BaseUnityPlugin
 				default:
 					break;
 			}
-		if (!(生长度 == "速生"))
 			/*
 			Progress 生长度
 			生长度ProgressRate + 生长度ProgressRate -
@@ -605,7 +605,6 @@ public class MoonFood : BaseUnityPlugin
 				default:
 					break;
 			}
-		if (!(土壤疏松度 == "松土"))
 			switch (土壤疏松度) {
 				case "松土":
 					添加Tag(plant, "tag_Plant_AirMore");
@@ -657,7 +656,7 @@ public class MoonFood : BaseUnityPlugin
 				//卡牌描述
 				liaoli.CardDescription.DefaultText = cardDescription;
 				liaoli.CardDescription.ParentObjectID = guid;
-				liaoli.CardDescriptionSetLocalizationInfo();
+				liaoli.CardDescription.SetLocalizationInfo();
 
 				//卡牌图片
 				Texture2D texture2D = new Texture2D(200, 300);
@@ -672,8 +671,8 @@ public class MoonFood : BaseUnityPlugin
 	            liaoli.CardName.SetLocalizationInfo();
 			
 				liaoli.CardName.ParentObjectID = guid;
-				liaoli.CardName.LocalizationKey = "";
-
+				liaoli.CardName.SetLocalizationInfo();
+				
 				string[] dummy = cardNeed.Split('|');
 				Array.Sort(dummy);
 				string dummy2 = string.Join("|", dummy);
@@ -745,11 +744,8 @@ public class MoonFood : BaseUnityPlugin
 					Traverse.Create(action.ProducedCards[0]).Field("DroppedCards").SetValue(cds);
 				}
 			}
+		}
 
-    /// <summary>
-    /// Container merger
-    /// </summary>
-    /// <param name="action"></param>
 		public static void 容器合并(CardAction action, InGameCardBase card)
 		{
 			//读取容器内容物
@@ -766,8 +762,6 @@ public class MoonFood : BaseUnityPlugin
 							}
 						}
 					}
-		{
-			if (num3 > 20)
 				}
 				int level = (int)Math.Floor(totalCon / 300);
 				if (level > 0) {
@@ -789,8 +783,10 @@ public class MoonFood : BaseUnityPlugin
 					CardDrop[] cds = new CardDrop[] { cd };
 					Traverse.Create(action.ProducedCards[0]).Field("DroppedCards").SetValue(cds);
 				}
-	}
+			}
+		}
 
+		//==================================容器整合===========================================
 		public static CardData 生成容器(string name, string guid, string cardName, string cardDescription, int contain){
 			CardData 料理模板 = utc("247cb2c7dc0f4bc0814e91d794900c40");
 			CardData liaoli = ScriptableObject.CreateInstance<CardData>();
@@ -807,7 +803,7 @@ public class MoonFood : BaseUnityPlugin
 			//卡牌名称
 			liaoli.CardName.DefaultText = cardName;
 			liaoli.CardName.ParentObjectID = guid;
-			liaoli.CardName.LocalizationKey.SetLocalizationInfo();
+			liaoli.CardName.SetLocalizationInfo();
 
 			//修改容量
 			liaoli.MaxLiquidCapacity = 300 * contain;
@@ -950,9 +946,8 @@ public class MoonFood : BaseUnityPlugin
 				streamReader.Close();
 			}
 			else {
-		{
-			Debug.Log("没路径！");
-		}
+				Debug.Log("没路径！");
+			}
 
 			//======================添加炼金========================
 			path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\MoonLian-EX.txt";
@@ -972,9 +967,8 @@ public class MoonFood : BaseUnityPlugin
 				streamReader.Close();
 			}
 			else {
-		{
-			Debug.Log("没路径！");
-		}
+				Debug.Log("没路径！");
+			}
 
 			//======================添加容器========================
 			List<string> list = new List<string>
