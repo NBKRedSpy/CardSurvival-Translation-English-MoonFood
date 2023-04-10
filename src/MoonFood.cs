@@ -1133,10 +1133,11 @@ public class MoonFood : BaseUnityPlugin
 		[HarmonyPatch(typeof(GameManager), "ActionRoutine")]
 		public static IEnumerator ARPatch(IEnumerator results, CardAction _Action, InGameCardBase _ReceivingCard, bool _FastMode, bool _ModifiersAlreadyCollected = false)
 		{
-			if (_Action.ActionName == "高级烹饪" && _Action.ActionName.LocalizationKey == "GuilPot") {
-				//Debug.Log("开始判断");
-				//每有1个内容物就有1个InventorySlot，然后每个InventorySlot里有1个AllCards，目前实现名称比对，然后需要实现tag比对
-				if (_ReceivingCard?.CardsInInventory.Count > 0) {
+            if (_Action.ActionName.LocalizationKey == "GuilPot")
+			{ 
+                //Debug.Log("开始判断");
+                //每有1个内容物就有1个InventorySlot，然后每个InventorySlot里有1个AllCards，目前实现名称比对，然后需要实现tag比对
+                if (_ReceivingCard?.CardsInInventory.Count > 0) {
 					int x = 0;
 					string[] 内容物 = new string[4];
 					string[] 内容物标签 = new string[4];
