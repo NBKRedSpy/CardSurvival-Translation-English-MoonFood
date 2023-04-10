@@ -7,6 +7,7 @@ using System.Text;
 using BepInEx;
 using HarmonyLib;
 using UnityEngine;
+using LocalizationUtilities;
 
 namespace 饥荒食物;
 
@@ -25,6 +26,13 @@ public class MoonFood : BaseUnityPlugin
 
 	private void Awake()
 	{
+
+		 LocalizationStringUtility.Init(
+			 Config.Bind<bool>("Debug", "LogCardInfo", false, "If true, will output the localization keys for the cards. 如果为真，将输出卡片的本地化密钥。").Value,
+			 Info.Location,
+			 Logger
+		);
+
 		Harmony.CreateAndPatchAll(typeof(MoonFood));
 		base.Logger.LogInfo("Plugin 晓月食物 is loaded!");
 	}
@@ -43,7 +51,11 @@ public class MoonFood : BaseUnityPlugin
 		return UniqueIDScriptable.GetFromID<CardData>(uniqueID);
 	}
 
-	public static CardData 生成料理(string name, string guid, string cardName, string cardDescription, string cardNeed, string cardStat, float usage, float spoilTime)
+
+    /// <summary>
+    /// Dishes
+    /// </summary>
+    public static CardData 生成料理(string name, string guid, string cardName, string cardDescription, string cardNeed, string cardStat, float usage, float spoilTime)
 	{
 		CardData original = utc("5dea9d144f3e41a6850c9fa202279d38");
 		CardData cardData = ScriptableObject.CreateInstance<CardData>();
@@ -53,7 +65,7 @@ public class MoonFood : BaseUnityPlugin
 		cardData.Init();
 		cardData.CardDescription.DefaultText = cardDescription;
 		cardData.CardDescription.ParentObjectID = guid;
-		cardData.CardDescription.LocalizationKey = "";
+		cardData.CardDescription.SetLocalizationInfo();
 		Texture2D texture2D = new Texture2D(200, 300);
 		string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName + ".png";
 		if (!File.Exists(path))
@@ -65,7 +77,7 @@ public class MoonFood : BaseUnityPlugin
 		cardData.CardImage = cardImage;
 		cardData.CardName.DefaultText = cardName;
 		cardData.CardName.ParentObjectID = guid;
-		cardData.CardName.LocalizationKey = "";
+		cardData.CardName.SetLocalizationInfo();
 		string[] array = cardNeed.Split('|');
 		Array.Sort(array);
 		string key = string.Join("|", array);
@@ -202,7 +214,12 @@ public class MoonFood : BaseUnityPlugin
 		food_dict[key] = utc(guid);
 	}
 
-	public static string 生成空格(int 数量)
+    /// <summary>
+    /// Generate space
+    /// </summary>
+    /// <param name="数量">quantity</param>
+    /// <returns></returns>
+    public static string 生成空格(int 数量)
 	{
 		string text = "";
 		for (int i = 0; i < 数量; i++)
@@ -212,7 +229,10 @@ public class MoonFood : BaseUnityPlugin
 		return text;
 	}
 
-	private static void 添加种田(string GivenGuid, string ReceiGuid, string ActionName, string ActionDescription, int duration, string ProduceGuid = "")
+    /// <summary>
+    /// Add farm
+    /// </summary>
+    private static void 添加种田(string GivenGuid, string ReceiGuid, string ActionName, string ActionDescription, int duration, string ProduceGuid = "")
 	{
 		CardData cardData = utc(GivenGuid);
 		CardData cardData2 = utc(ReceiGuid);
@@ -223,13 +243,15 @@ public class MoonFood : BaseUnityPlugin
 		LocalizedString localizedString = default(LocalizedString);
 		localizedString.DefaultText = ActionName;
 		localizedString.ParentObjectID = "";
-		localizedString.LocalizationKey = "Guil-更多水果_Dummy";
+		localizedString.SetLocalizationInfo();
 		LocalizedString localizedString2 = localizedString;
+
 		localizedString = default(LocalizedString);
 		localizedString.DefaultText = ActionDescription;
 		localizedString.ParentObjectID = "";
-		localizedString.LocalizationKey = "Guil-更多水果_Dummy";
+		localizedString.SetLocalizationInfo();
 		LocalizedString desc = localizedString;
+
 		CardOnCardAction cardOnCardAction = new CardOnCardAction(localizedString2, desc, duration);
 		Array.Resize(ref cardOnCardAction.CompatibleCards.TriggerCards, 1);
 		cardOnCardAction.CompatibleCards.TriggerCards[0] = cardData;
@@ -257,7 +279,10 @@ public class MoonFood : BaseUnityPlugin
 		}
 	}
 
-	private static void 添加栽培土交互(string GivenGuid, string ReceiGuid, string ActionName, string ActionDescription, int duration, string ProduceGuid = "")
+    /// <summary>
+    /// Add cultivation soil interaction
+    /// </summary>
+    private static void 添加栽培土交互(string GivenGuid, string ReceiGuid, string ActionName, string ActionDescription, int duration, string ProduceGuid = "")
 	{
 		CardData cardData = utc(GivenGuid);
 		CardData cardData2 = utc(ReceiGuid);
@@ -268,12 +293,14 @@ public class MoonFood : BaseUnityPlugin
 		LocalizedString localizedString = default(LocalizedString);
 		localizedString.DefaultText = ActionName;
 		localizedString.ParentObjectID = "";
-		localizedString.LocalizationKey = "Guil-更多水果_Dummy";
+		localizedString.SetLocalizationInfo();
 		LocalizedString localizedString2 = localizedString;
+
 		localizedString = default(LocalizedString);
 		localizedString.DefaultText = ActionDescription;
 		localizedString.ParentObjectID = "";
-		localizedString.LocalizationKey = "Guil-更多水果_Dummy";
+		localizedString.SetLocalizationInfo();
+
 		LocalizedString desc = localizedString;
 		CardOnCardAction cardOnCardAction = new CardOnCardAction(localizedString2, desc, duration);
 		Array.Resize(ref cardOnCardAction.CompatibleCards.TriggerCards, 1);
@@ -299,7 +326,11 @@ public class MoonFood : BaseUnityPlugin
 		}
 	}
 
-	public static CardData[] 生成草本植物(string name, string[] guid, string[] cardName, string[] cardDescription, string whereToFindGuid, int CollectionWeight, int getNum, int plantNum, bool caneat, string eatEffect, float spoilTime, int proDays)
+    /// <summary>
+    /// Generate herbal
+    /// </summary>
+    /// <returns></returns>
+    public static CardData[] 生成草本植物(string name, string[] guid, string[] cardName, string[] cardDescription, string whereToFindGuid, int CollectionWeight, int getNum, int plantNum, bool caneat, string eatEffect, float spoilTime, int proDays)
 	{
 		CardData[] array = new CardData[3];
 		CardData cardData = ScriptableObject.CreateInstance<CardData>();
@@ -308,7 +339,9 @@ public class MoonFood : BaseUnityPlugin
 		cardData.name = name;
 		cardData.Init();
 		cardData.CardDescription.DefaultText = cardDescription[0];
-		cardData.CardDescription.ParentObjectID = cardData.UniqueID;
+		cardData.CardDescription.SetLocalizationInfo();
+
+        cardData.CardDescription.ParentObjectID = cardData.UniqueID;
 		Texture2D texture2D = new Texture2D(200, 300);
 		string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName[0] + ".png";
 		if (!File.Exists(path))
@@ -319,15 +352,17 @@ public class MoonFood : BaseUnityPlugin
 		Sprite cardImage = Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), Vector2.zero);
 		cardData.CardImage = cardImage;
 		cardData.CardName.DefaultText = cardName[0];
-		cardData.CardName.ParentObjectID = cardData.UniqueID;
+        cardData.CardName.SetLocalizationInfo();
+
+        cardData.CardName.ParentObjectID = cardData.UniqueID;
 		if (!caneat)
 		{
 			cardData.DismantleActions.Clear();
 		}
-		else if (!(eatEffect == "蔬菜"))
-		{
-			if (eatEffect == "水果")
-			{
+		else if (!(eatEffect == "蔬菜")) //vegetable
+        {
+			if (eatEffect == "水果") //fruit
+            {
 				float[] array2 = new float[6] { 20f, 7.3333335f, 5f, 3f, 43.333332f, -10f };
 				for (int i = 0; i < 6; i++)
 				{
@@ -360,7 +395,9 @@ public class MoonFood : BaseUnityPlugin
 		cardData2.name = name + "丛";
 		cardData2.Init();
 		cardData2.CardDescription.DefaultText = cardDescription[1];
-		cardData2.CardDescription.ParentObjectID = cardData2.UniqueID;
+		cardData2.CardDescription.SetLocalizationInfo();
+
+        cardData2.CardDescription.ParentObjectID = cardData2.UniqueID;
 		Texture2D texture2D2 = new Texture2D(200, 300);
 		path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName[1] + ".png";
 		if (!File.Exists(path))
@@ -371,6 +408,7 @@ public class MoonFood : BaseUnityPlugin
 		cardImage = Sprite.Create(texture2D2, new Rect(0f, 0f, texture2D2.width, texture2D2.height), Vector2.zero);
 		cardData2.CardImage = cardImage;
 		cardData2.CardName.DefaultText = cardName[1];
+		cardData2.CardName.SetLocalizationInfo();	
 		cardData2.CardName.ParentObjectID = cardData2.UniqueID;
 		CardDrop cardDrop = default(CardDrop);
 		cardDrop.DroppedCard = cardData;
@@ -384,6 +422,7 @@ public class MoonFood : BaseUnityPlugin
 		cardData3.name = name + "田";
 		cardData3.Init();
 		cardData3.CardName.DefaultText = cardName[2];
+		cardData3.CardName.SetLocalizationInfo();	
 		cardData3.CardName.ParentObjectID = cardData3.UniqueID;
 		for (int l = 0; l <= 2; l++)
 		{
@@ -412,13 +451,25 @@ public class MoonFood : BaseUnityPlugin
 		return array;
 	}
 
-	public static void 添加Tag(CardData card, string tagname)
+    /// <summary>
+    /// Add to tag
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="tagname"></param>
+    public static void 添加Tag(CardData card, string tagname)
 	{
 		Array.Resize(ref card.CardTags, card.CardTags.Length + 1);
 		card.CardTags[card.CardTags.Length - 1] = plantTagDict[tagname];
 	}
 
-	public static void 联动精耕细作(CardData 植株, string 联动后植株内部名, string 联动植株Guid, string 水分需求, string 环境需求1, string 环境需求2, string 螨虫, string 真菌, string 寿命, string 产物进度, string 生长度, string 肥力, string 土壤疏松度, string 农药, string 是否小体型)
+    /// <summary>
+    /// Link and intensive cultivation
+    /// </summary>
+	/// Card Data plant, string internal name of plant after linkage, string linkage plant Guid, string water requirement, 
+	/// string environmental requirement 1, string environmental requirement 2, string mites, string fungus, string 
+	/// lifespan, string product progress, string growth length, string fertility, string soil porosity, string pesticide, 
+	/// string whether it is small
+    public static void 联动精耕细作(CardData 植株, string 联动后植株内部名, string 联动植株Guid, string 水分需求, string 环境需求1, string 环境需求2, string 螨虫, string 真菌, string 寿命, string 产物进度, string 生长度, string 肥力, string 土壤疏松度, string 农药, string 是否小体型)
 	{
 		CardData cardData = ScriptableObject.CreateInstance<CardData>();
 		cardData = UnityEngine.Object.Instantiate(utc("cb27f80532de40c5a164202ed138090c"));
@@ -426,10 +477,10 @@ public class MoonFood : BaseUnityPlugin
 		cardData.name = 联动后植株内部名;
 		cardData.Init();
 		cardData.CardName.DefaultText = string.Concat(植株.CardName, "植株");
-		cardData.CardName.LocalizationKey = "";
+		cardData.CardName.SetLocalizationInfo();
 		cardData.CardName.ParentObjectID = cardData.UniqueID;
 		cardData.CardDescription.DefaultText = "我应该把它放入泥土中，等待它成熟。\n植株特性：";
-		cardData.CardDescription.LocalizationKey = "";
+		cardData.CardDescription.SetLocalizationInfo();
 		cardData.CardDescription.ParentObjectID = cardData.UniqueID;
 		添加栽培土交互(植株.UniqueID, "5b01eb40bb8245a091086c584538238d", "制作植株", "将植株放入栽培土中", 0, 联动植株Guid);
 		CardDrop cardDrop = default(CardDrop);
@@ -442,13 +493,17 @@ public class MoonFood : BaseUnityPlugin
 			if (水分需求 == "喜旱")
 			{
 				添加Tag(cardData, "tag_Plant_DirtFavor");
+
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 水分需求;
-			}
+				cardData.CardDescription.SetLocalizationInfo();
+
+            }
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_WaterFavor");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 水分需求;
+			cardData.CardDescription.SetLocalizationInfo();	
 		}
 		if (!(环境需求1 == "喜潮"))
 		{
@@ -456,12 +511,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_DryFavor");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 环境需求1;
+				cardData.CardDescription.SetLocalizationInfo();	
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_DampFavor");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 环境需求1;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(环境需求2 == "喜光"))
 		{
@@ -469,12 +526,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_DarkFavor");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 环境需求2;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_LightFavor");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 环境需求2;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(螨虫 == "耐螨虫"))
 		{
@@ -482,25 +541,30 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_MiteFear");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 螨虫;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_MiteProof");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 螨虫;
-		}
+            cardData.CardDescription.SetLocalizationInfo();
+
+        }
 		if (!(真菌 == "耐真菌"))
 		{
 			if (真菌 == "怕真菌")
 			{
 				添加Tag(cardData, "tag_Plant_FungiFear");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 真菌;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_FungiProof");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 真菌;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(寿命 == "长寿"))
 		{
@@ -508,12 +572,15 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_ShortLive");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 寿命;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_LongLive");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 寿命;
+			cardData.CardDescription.SetLocalizationInfo();
+			
 		}
 		if (!(产物进度 == "高产"))
 		{
@@ -521,12 +588,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_LowProduce");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 产物进度;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_HighProduce");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 产物进度;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(生长度 == "速生"))
 		{
@@ -534,12 +603,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_GrowSlow");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 生长度;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_GrowFast");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 生长度;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(肥力 == "肥田"))
 		{
@@ -547,12 +618,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_ConsumeFertilize");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 肥力;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_Fertilize");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 肥力;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(土壤疏松度 == "松土"))
 		{
@@ -560,12 +633,14 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_AirLess");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 土壤疏松度;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_AirMore");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 土壤疏松度;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (!(农药 == "杀螨虫"))
 		{
@@ -573,18 +648,22 @@ public class MoonFood : BaseUnityPlugin
 			{
 				添加Tag(cardData, "tag_Plant_AntiFungi");
 				cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 农药;
+				cardData.CardDescription.SetLocalizationInfo();
 			}
 		}
 		else
 		{
 			添加Tag(cardData, "tag_Plant_AntiMite");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + 农药;
+			cardData.CardDescription.SetLocalizationInfo();
 		}
 		if (是否小体型 == "是")
 		{
 			添加Tag(cardData, "tag_Plant_Small");
 			cardData.CardDescription.DefaultText = cardData.CardDescription.DefaultText + "小体型";
+			cardData.CardDescription.SetLocalizationInfo();
 		}
+
 		GameLoad.Instance.DataBase.AllData.Add(cardData);
 	}
 
@@ -599,7 +678,8 @@ public class MoonFood : BaseUnityPlugin
 			cardData.Init();
 			cardData.CardDescription.DefaultText = cardDescription;
 			cardData.CardDescription.ParentObjectID = guid;
-			cardData.CardDescription.LocalizationKey = "";
+			cardData.CardDescription.SetLocalizationInfo();
+
 			Texture2D texture2D = new Texture2D(200, 300);
 			string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Resource\\Picture\\" + cardName + ".png";
 			if (!File.Exists(path))
@@ -610,8 +690,9 @@ public class MoonFood : BaseUnityPlugin
 			Sprite cardImage = Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), Vector2.zero);
 			cardData.CardImage = cardImage;
 			cardData.CardName.DefaultText = cardName;
-			cardData.CardName.ParentObjectID = guid;
-			cardData.CardName.LocalizationKey = "";
+            cardData.CardName.SetLocalizationInfo();
+            cardData.CardName.ParentObjectID = guid;
+			
 			string[] array = cardNeed.Split('|');
 			Array.Sort(array);
 			string key = string.Join("|", array);
@@ -629,7 +710,10 @@ public class MoonFood : BaseUnityPlugin
 		}
 	}
 
-	public static void 验证炼金(CardAction action, InGameCardBase card)
+    /// <summary>
+    /// Verification alchemy
+    /// </summary>
+    public static void 验证炼金(CardAction action, InGameCardBase card)
 	{
 		if ((object)card == null || card.CardsInInventory.Count <= 0)
 		{
@@ -699,7 +783,12 @@ public class MoonFood : BaseUnityPlugin
 		}
 	}
 
-	public static void 容器合并(CardAction action, InGameCardBase card)
+    /// <summary>
+    /// Container merger
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="card"></param>
+    public static void 容器合并(CardAction action, InGameCardBase card)
 	{
 		if ((object)card == null || card.CardsInInventory.Count <= 0)
 		{
@@ -758,10 +847,10 @@ public class MoonFood : BaseUnityPlugin
 		cardData.Init();
 		cardData.CardDescription.DefaultText = cardDescription;
 		cardData.CardDescription.ParentObjectID = guid;
-		cardData.CardDescription.LocalizationKey = "";
+		cardData.CardDescription.SetLocalizationInfo();	
 		cardData.CardName.DefaultText = cardName;
 		cardData.CardName.ParentObjectID = guid;
-		cardData.CardName.LocalizationKey = "";
+		cardData.CardName.SetLocalizationInfo();
 		cardData.MaxLiquidCapacity = 300 * contain;
 		return cardData;
 	}
@@ -945,7 +1034,7 @@ public class MoonFood : BaseUnityPlugin
 	[HarmonyPatch(typeof(GameManager), "ActionRoutine")]
 	public static IEnumerator ARPatch(IEnumerator results, CardAction _Action, InGameCardBase _ReceivingCard, bool _FastMode, bool _ModifiersAlreadyCollected = false)
 	{
-		if (_Action.ActionName == "高级烹饪" && _Action.ActionName.LocalizationKey == "GuilPot")
+		if (_Action.ActionName.LocalizationKey == "GuilPot")
 		{
 			if ((object)_ReceivingCard != null && _ReceivingCard.CardsInInventory.Count > 0)
 			{
@@ -1031,11 +1120,17 @@ public class MoonFood : BaseUnityPlugin
 				}
 			}
 		}
-		if (_Action.ActionName == "高级炼金" && _Action.ActionName.LocalizationKey == "Guil-炼金")
-		{
+        //todo: Make sure to add these keys into the translation.
+        //Alchemy - Refinery
+        //Translated from:_Action.ActionName == "高级炼金" _Action.ActionName.LocalizationKey == "Guil-炼金"
+        if (_Action.ActionName.LocalizationKey == "Guil-Alchemy_Refinery")
+        {
 			验证炼金(_Action, _ReceivingCard);
 		}
-		if (_Action.ActionName == "容器合并" && _Action.ActionName.LocalizationKey == "Guil-炼金")
+
+        //Container merger - Refinery (Google Translate)
+        //Translated from _Action.ActionName == "容器合并" _Action.ActionName.LocalizationKey == "Guil-炼金"
+        if (_Action.ActionName.LocalizationKey == "Guil-ContainerMerger_Refinery")
 		{
 			容器合并(_Action, _ReceivingCard);
 		}

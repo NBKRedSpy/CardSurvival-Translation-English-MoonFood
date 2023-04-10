@@ -92,7 +92,7 @@
   "CardBackgroundWarpType": 3,
   "CardDescription": {
     "DefaultText": "一个特制的容器。",
-    "LocalizationKey": "translate-55b2b0b1-58a8-4ca6-988f-5b4efe2271c4",
+    "LocalizationKey": "T-ShcukvadUiq174EVgzgVN4kPwCg=",
     "ParentObjectID": "247cb2c7dc0f4bc0814e91d794900c40"
   },
   "CardImage": {
@@ -104,7 +104,7 @@
   "CardInteractions": [],
   "CardName": {
     "DefaultText": "特制容器",
-    "LocalizationKey": "translate-a3915a33-467f-4277-8868-4a2620b93f8d",
+    "LocalizationKey": "T-9Mwr4IEHq5k1TpADssJ1YXA6u3I=",
     "ParentObjectID": "247cb2c7dc0f4bc0814e91d794900c40"
   },
   "CardTags": [],

@@ -455,7 +455,7 @@
   "CardBackgroundWarpType": 3,
   "CardDescription": {
     "DefaultText": "一处高级炼金台。",
-    "LocalizationKey": "translate-f8b03a58-a0f5-42e8-982b-93a0666c0b7c",
+    "LocalizationKey": "T-wTn/hfGiFlNDYJTEtrEJyW8yhT4=",
     "ParentObjectID": ""
   },
   "CardImage": {
@@ -467,7 +467,7 @@
   "CardInteractions": [],
   "CardName": {
     "DefaultText": "高级炼金台",
-    "LocalizationKey": "translate-b6e24490-a981-4236-9bf3-3e7847e64242",
+    "LocalizationKey": "T-PDaUpK1FHa+Qb0wAox8iy4w+87E=",
     "ParentObjectID": "0c9fc45aa9d941afbfd892a4057c937f"
   },
   "CardTags": [],

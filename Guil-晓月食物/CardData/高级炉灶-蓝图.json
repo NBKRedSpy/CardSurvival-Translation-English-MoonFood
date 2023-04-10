@@ -455,7 +455,7 @@
   "CardBackgroundWarpType": 3,
   "CardDescription": {
     "DefaultText": "一处高级炉灶，可以产出美味的食材。",
-    "LocalizationKey": "translate-c4609471-40bc-4413-a7f9-b307c3b3a73c",
+    "LocalizationKey": "T-9gTGicmtA5VMdOlLPEoHmtIv4pc=",
     "ParentObjectID": ""
   },
   "CardImage": {
@@ -467,7 +467,7 @@
   "CardInteractions": [],
   "CardName": {
     "DefaultText": "高级炉灶",
-    "LocalizationKey": "translate-65830b2f-7e7c-4887-8621-e29c421dd6f1",
+    "LocalizationKey": "T-0Ji/bhQxkvb075o5HA00sYEtfgo=",
     "ParentObjectID": "cd2791a90dfe4056b57574b9d961b15d"
   },
   "CardTags": [],

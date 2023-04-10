@@ -90,7 +90,7 @@
   },
   "CardDescription": {
     "DefaultText": "An edible plant.",
-    "LocalizationKey": "translate-e7438c18-ca9d-4d7d-8ad2-bf9843276c17",
+    "LocalizationKey": "T-R1yIykRIRhYl2vyCi5U0Lv4h91c=",
     "ParentObjectID": "4b17f870e9ca41eb95bf7d08aa387528"
   },
   "CardImage": {
@@ -102,7 +102,7 @@
   "CardInteractions": [],
   "CardName": {
     "DefaultText": "Lemongrass",
-    "LocalizationKey": "translate-5a1ba8ab-ce3b-4cd8-910e-b6b76c18f82b",
+    "LocalizationKey": "T-aMup3lauf/JTTo3kc9gJVAWYfZI=",
     "ParentObjectID": "4b17f870e9ca41eb95bf7d08aa387528"
   },
   "CardTags": [],

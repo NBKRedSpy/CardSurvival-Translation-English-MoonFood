@@ -11,7 +11,7 @@
   },
   "OverrideDescription": {
     "DefaultText": "这里记录了当前可用的菜谱：",
-    "LocalizationKey": "translate-795962ee-feda-42b8-b1f6-faf45de1841e",
+    "LocalizationKey": "T-0ZRNRZJmELjaYBhbbV446v8DPpU=",
     "ParentObjectID": "40ebba142baa71e4e826aa4a6801a236"
   },
   "OverrideIllustration": {
@@ -22,7 +22,7 @@
   "OverrideIllustrationWarpType": 3,
   "OverrideTitle": {
     "DefaultText": "高级炉灶",
-    "LocalizationKey": "translate-65830b2f-7e7c-4887-8621-e29c421dd6f1",
+    "LocalizationKey": "T-0Ji/bhQxkvb075o5HA00sYEtfgo=",
     "ParentObjectID": ""
   },
   "RelatedEntries": []

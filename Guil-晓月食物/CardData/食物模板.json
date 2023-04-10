@@ -191,7 +191,7 @@
       },
       "ActionName": {
         "DefaultText": "享用",
-        "LocalizationKey": "translate-0221358e-96f7-4e83-95a2-ff34403a5094",
+        "LocalizationKey": "T-PdodtTOP/LdWzSdt9GPQNOItSvo=",
         "ParentObjectID": "5dea9d144f3e41a6850c9fa202279d38"
       },
       "ActionSounds": [],
@@ -3932,7 +3932,7 @@
     "OnZero": {
       "ActionDescription": {
         "DefaultText": "吃完啦！",
-        "LocalizationKey": "translate-f0dbd663-a966-41e8-b3f3-a53ba6ae925b",
+        "LocalizationKey": "T-2X+XVfNmCZdp8+reukp2EcWVCVk=",
         "ParentObjectID": ""
       },
       "ActionLog": {

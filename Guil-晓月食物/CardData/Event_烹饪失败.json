@@ -90,7 +90,7 @@
   },
   "CardDescription": {
     "DefaultText": "为了大家的生命安全，你还是仔细看看配方再做吧。",
-    "LocalizationKey": "translate-86b49f4d-0151-4d36-ba6d-cb58ceaf0207",
+    "LocalizationKey": "T-j0NeMEmzLSeA+oWaNoI/PUu8A4M=",
     "ParentObjectID": "63c8683151734206bc22ebb75994dc20"
   },
   "CardImage": {
@@ -102,7 +102,7 @@
   "CardInteractions": [],
   "CardName": {
     "DefaultText": "失败",
-    "LocalizationKey": "translate-c6e5fdad-1c8d-447c-89f5-55b2aa2f07d5",
+    "LocalizationKey": "T-PjyAaLsOe2N8HXAY070qZEyeja0=",
     "ParentObjectID": "63c8683151734206bc22ebb75994dc20"
   },
   "CardTags": [],
@@ -186,7 +186,7 @@
       },
       "ActionName": {
         "DefaultText": "继续",
-        "LocalizationKey": "translate-97a8d6d6-aab3-4495-ae83-1f02ab07234f",
+        "LocalizationKey": "T-H8GvxcVe2MDMKPmXFbU8rOTDcig=",
         "ParentObjectID": ""
       },
       "ActionSounds": [],

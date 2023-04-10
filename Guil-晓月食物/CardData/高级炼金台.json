@@ -90,7 +90,7 @@
   },
   "CardDescription": {
     "DefaultText": "一个炼金台，可以熔炼物质。",
-    "LocalizationKey": "translate-5d14bfaa-fbd9-4619-be17-fe7eae857bac",
+    "LocalizationKey": "T-K0bqAvz5KIYT+A4Pw3rtFjxf9ok=",
     "ParentObjectID": "6ffef1ebecb369f9cf96a9afd97cabf8"
   },
   "CardImage": {
@@ -102,7 +102,7 @@
   "CardInteractions": [],
   "CardName": {
     "DefaultText": "高级炼金台",
-    "LocalizationKey": "translate-b6e24490-a981-4236-9bf3-3e7847e64242",
+    "LocalizationKey": "T-PDaUpK1FHa+Qb0wAox8iy4w+87E=",
     "ParentObjectID": "6ffef1ebecb369f9cf96a9afd97cabf8"
   },
   "CardTags": [],
@@ -184,7 +184,7 @@
       },
       "ActionName": {
         "DefaultText": "高级炼金",
-        "LocalizationKey": "Guil-炼金",
+        "LocalizationKey": "Guil-Alchemy_Refinery",
         "ParentObjectID": "6dbd8622757f432f908944ff4547b974"
       },
       "ActionSounds": [],
@@ -573,7 +573,7 @@
       },
       "ActionName": {
         "DefaultText": "容器合并",
-        "LocalizationKey": "Guil-炼金",
+        "LocalizationKey": "Guil-ContainerMerger_Refinery",
         "ParentObjectID": "6dbd8622757f432f908944ff4547b974"
       },
       "ActionSounds": [],

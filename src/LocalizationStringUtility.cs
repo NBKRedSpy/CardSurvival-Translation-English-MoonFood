@@ -4,9 +4,35 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using BepInEx.Logging;
+using HarmonyLib;
 
 namespace LocalizationUtilities
 {
+
+    /// <summary>
+    /// A utility to support English translations via ./Localization/SimpEn.csv files.
+    /// Can generate new keys based on a hash,
+    /// Output the keys to the BepInEx log.  Used for creating SimpEn.csv.
+    /// Load ./Localization/SimpEn.csv text if the matching LocalizationKey is found in the file.
+    /// </summary>
+    /// <remarks>Version 1.2.0</remarks>
+    /// <example>
+    /// Init in the BepInExUnityPlugin::Awake before Harmony patch:
+    /// 	private void Awake()
+    /// <code>
+    ///       LocalizationStringUtility.Init(
+    ///           Config.Bind<bool>("Debug", "LogCardInfo", false, "If true, will output the localization keys for the cards. 如果为真，将输出卡片的本地化密钥。")
+    ///               .Value,
+    ///           Info.Location,
+    ///           Logger
+    ///       );
+    /// </code>
+    /// Call set for anything missing a localization key:
+    /// <code>
+    ///     cardData.CardDescription.DefaultText = 水果名称 + "榨成的果汁，可以喝。";
+    ///     cardData.CardDescription.SetLocalizationInfo();
+    /// </code>
+    /// </example>
     public static class LocalizationStringUtility
     {
         /// <summary>        
@@ -20,11 +46,22 @@ namespace LocalizationUtilities
         /// </summary>
         private static string ModPath { get; set; }
 
+        /// <summary>
+        /// The BepInEx Logger to write errors to.
+        /// </summary>
         private static ManualLogSource Logger { get; set; }
 
         private static SHA1 Sha1 = SHA1.Create();
 
+        /// <summary>
+        /// Lookup for DefaultText translations.
+        /// </summary>
         private static Dictionary<string, string> Localization;
+
+        /// <summary>
+        /// The prefix to use when creating a key
+        /// </summary>
+        private static string KeyPrefix { get; set; }
 
         /// <summary>
         /// Initializes the Utility settings.
@@ -32,34 +69,38 @@ namespace LocalizationUtilities
         /// <param name="logCardInfo"></param>
         /// <param name="dllPath"></param>
         /// <param name="logger"></param>
-        public static void Init(bool logCardInfo, string dllPath, ManualLogSource logger)
+        public static void Init(bool logCardInfo, string dllPath, ManualLogSource logger, string keyPrefix = "T-")
         {
             LogCardInfo = logCardInfo;
             ModPath = Path.GetDirectoryName(dllPath);
             Logger = logger;
+            KeyPrefix = keyPrefix;
         }
 
         /// <summary>
         /// Generates and sets a localization key based on a hash of the DefaultText.
         /// If there is a Localization file loaded, the DefaultText will be set to that key.
         /// </summary>
+        /// <remarks>
+        /// This is the same hash as used by CardSurvival-Localization as there can be cross mod usage.
+        /// </remarks>
         /// <param name="localizedString"></param>
         public static void SetLocalizationInfo(this ref LocalizedString localizedString)
         {
-            if(Localization == null) Localization = GetLocalizationLookup();
+            if (Localization == null) Localization = GetLocalizationLookup();
             if (String.IsNullOrEmpty(localizedString.DefaultText)) return;
 
 
             //----Set LocalizationKey
-            const string prefix = "T-";
-            string key = prefix + Convert.ToBase64String(Sha1.ComputeHash(UTF8Encoding.UTF8.GetBytes(localizedString.DefaultText)));
+            string key = KeyPrefix + Convert.ToBase64String(Sha1.ComputeHash(
+                UTF8Encoding.UTF8.GetBytes(localizedString.DefaultText.Trim())));
 
             localizedString.LocalizationKey = key;
 
 
             //----Set localized text if available.
             //If there is a Localization lookup loaded, replace the text.
-            if(Localization.TryGetValue(key, out string localizedText))
+            if (Localization.TryGetValue(key, out string localizedText))
             {
                 localizedString.DefaultText = localizedText;
             }
@@ -71,12 +112,12 @@ namespace LocalizationUtilities
                 Logger.LogInfo($"{localizedString.LocalizationKey}|{localizedString.DefaultText}");
             }
         }
-        
+
         /// <summary>
         /// Creates a localization lookup from ./Localization/SimpEn.csv if the game's language is English.
         /// </summary>
         /// <returns></returns>
-        private static Dictionary<string,string> GetLocalizationLookup()
+        private static Dictionary<string, string> GetLocalizationLookup()
         {
 
             try
@@ -111,7 +152,7 @@ namespace LocalizationUtilities
             }
             catch (Exception ex)
             {
-                if(Logger is not null)
+                if (Logger is not null)
                 {
                     Logger.LogError($"Error loading SimpEn.csv: {ex}");
                 }

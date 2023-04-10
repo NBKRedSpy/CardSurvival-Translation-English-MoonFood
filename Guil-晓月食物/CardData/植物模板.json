@@ -92,7 +92,7 @@
   "CardBackgroundWarpType": 3,
   "CardDescription": {
     "DefaultText": "Edible, tastes like lemon!",
-    "LocalizationKey": "translate-373d264d-9129-47cb-b02f-86b66662c362",
+    "LocalizationKey": "T-iIWM4yFolbvPWfdLpgqxCg61SDg=",
     "ParentObjectID": "860762b307d74caf84d314790448f9f6"
   },
   "CardImage": {
@@ -549,7 +549,7 @@
   ],
   "CardName": {
     "DefaultText": "Lemongrass",
-    "LocalizationKey": "translate-5a1ba8ab-ce3b-4cd8-910e-b6b76c18f82b",
+    "LocalizationKey": "T-aMup3lauf/JTTo3kc9gJVAWYfZI=",
     "ParentObjectID": "860762b307d74caf84d314790448f9f6"
   },
   "CardTags": [],
