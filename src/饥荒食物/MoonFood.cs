@@ -1120,7 +1120,6 @@ public class MoonFood : BaseUnityPlugin
 				}
 			}
 		}
-        //todo: Make sure to add these keys into the translation.
         //Alchemy - Refinery
         //Translated from:_Action.ActionName == "高级炼金" _Action.ActionName.LocalizationKey == "Guil-炼金"
         if (_Action.ActionName.LocalizationKey == "Guil-Alchemy_Refinery")
